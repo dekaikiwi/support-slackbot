@@ -6,14 +6,14 @@ module SupportBot
 
         results = Trello::Action.search("board:\"Questions for the Tech Team\" #{searchTerm}")
 
-        if results["cards"].length
+        if results["cards"].length > 0
           attachments = []
           cards = results["cards"]
 
           cards.each do |card|
             attachments.push({
-                title: card.name,
-                title_link: card.short_url[0, 20],
+                title: card.name[0, 20],
+                title_link: card.short_url,
                 text: "#{card.desc[0, 100]}...",
                 fallback: card.name,
                 thumb_url: "https://s3.amazonaws.com/trello/images/og/trello-icon.png?v=2013-08-15"
