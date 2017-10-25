@@ -1,18 +1,27 @@
 module SupportBot
   module Commands
     class Support < SlackRubyBot::Commands::Base
-      match /^I need help with (.*)$/ do |client, data, match|
+
+      match /I need help with (.*)$/ do |client, data, match|
         searchTerm = match[1]
 
-        results = Trello::Action.search("board:\"Questions for the Tech Team\" #{searchTerm}")
+        # results from Trello
+        trello_results = Trello::Action.search(searchTerm)
 
-        if results["cards"].length > 0
+        # results from Zendesk
+        zendesk_results = $zendesk_client.search(:query => searchTerm).fetch
+
+        # return results
+        if trello_results["cards"].length > 0 || zendesk_results.count > 0
+
+          # for trello
           attachments = []
-          cards = results["cards"]
+          cards = trello_results["cards"]
 
+          # send messages from trello
           cards.each do |card|
             attachments.push({
-                title: card.name[0, 20],
+                title: card.name[0, 50],
                 title_link: card.short_url,
                 text: "#{card.desc[0, 100]}...",
                 fallback: card.name,
@@ -21,12 +30,36 @@ module SupportBot
           end
 
           client.say(channel: data.channel, text: "<@#{data.user}> Hey I found some information that might be useful! I'll send it to you in a thread ;)")
-          client.web_client.chat_postMessage(
-            channel: data.channel,
-            as_user: true,
-            attachments: attachments,
-            thread_ts: data.ts,
-          )
+          if attachments.length > 0
+            client.web_client.chat_postMessage(
+              channel: data.channel,
+              as_user: true,
+              attachments: attachments,
+              thread_ts: data.ts,
+            )
+          end
+
+          # for zendesk
+          attachments = []
+          zendesk_results.each do |result|
+            attachments.push({
+              title: result.subject,
+              title_link: result.url,
+              text: "#{result.description}",
+              raw_subject: result.subject,
+              thumb_url: "https://s3.amazonaws.com/static.shuttlerock.com/images/social-user-icons/zendesk.png"
+            })
+          end
+
+          # send messages of zendesk
+          if attachments.length > 0
+            client.web_client.chat_postMessage(
+              channel: data.channel,
+              as_user: true,
+              attachments: attachments,
+              thread_ts: data.ts,
+            )
+          end
 
         else
           client.say(channel: data.channel, text: "<@#{data.user}> Hmm... I couldn't find anything sorry!")

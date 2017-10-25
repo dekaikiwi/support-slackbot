@@ -7,6 +7,7 @@ gem 'sinatra'
 gem 'dotenv'
 gem 'celluloid-io'
 gem 'ruby-trello'
+gem "zendesk_api"
 
 group :development, :test do
   gem 'rake'

@@ -49,6 +49,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
+    inflection (1.0.0)
     json (2.0.3)
     listen (3.1.1)
       rb-fsevent (>= 0.9.3)
@@ -125,6 +126,12 @@ GEM
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
+    zendesk_api (1.14.2)
+      faraday (~> 0.9)
+      hashie (>= 1.2, < 4.0, != 3.3.0)
+      inflection
+      mime-types
+      multipart-post (~> 2.0)
 
 PLATFORMS
   ruby
@@ -141,6 +148,7 @@ DEPENDENCIES
   ruby-trello
   sinatra
   slack-ruby-bot
+  zendesk_api
 
 BUNDLED WITH
-   1.14.3
+   1.15.4
