@@ -7,6 +7,7 @@ require 'slack-supportbot'
 require 'trello'
 require 'web'
 require 'zendesk_api'
+require 'faraday'
 
 Trello.configure do |config|
   config.developer_public_key = ENV['TRELLO_API_KEY']

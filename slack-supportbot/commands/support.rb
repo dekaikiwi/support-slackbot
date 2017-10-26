@@ -2,14 +2,32 @@ module SupportBot
   module Commands
     class Support < SlackRubyBot::Commands::Base
 
+      def search_all_boards(client_site, match_url)
+        per_page = 20
+        page_num = 1
+        base_url = "#{client_site}/v2/entries.json&per_page=#{per_page}"
+
+        loop {
+          api_url = base_url + "&page=#{page_num}"
+          results = Faraday.get api_url
+          results.each do |entry|
+            entry if entry['source']['url'] == match_url
+          end
+
+          return nil if results.empty?
+          page_num += 1
+        }
+
+      end
+
       match /I need help with (.*)$/ do |client, data, match|
-        searchTerm = match[1]
+        search_term = match[1]
 
         # results from Trello
-        trello_results = Trello::Action.search(searchTerm)
+        trello_results = Trello::Action.search(search_term)
 
         # results from Zendesk
-        zendesk_results = $zendesk_client.search(:query => searchTerm).fetch
+        zendesk_results = $zendesk_client.search(:query => search_term).fetch
 
         # return results
         if trello_results["cards"].length > 0 || zendesk_results.count > 0
@@ -29,8 +47,9 @@ module SupportBot
               })
           end
 
-          client.say(channel: data.channel, text: "<@#{data.user}> Hey I found some information that might be useful! I'll send it to you in a thread ;)")
-          if attachments.length > 0
+          client.say(channel: data.channel,
+                     text: "<@#{data.user}> Hey I found some information that might be useful! I'll send it to you in a thread ;)")
+          unless attachments.empty?
             client.web_client.chat_postMessage(
               channel: data.channel,
               as_user: true,
@@ -52,7 +71,7 @@ module SupportBot
           end
 
           # send messages of zendesk
-          if attachments.length > 0
+          unless attachments.empty?
             client.web_client.chat_postMessage(
               channel: data.channel,
               as_user: true,
@@ -65,6 +84,22 @@ module SupportBot
           client.say(channel: data.channel, text: "<@#{data.user}> Hmm... I couldn't find anything sorry!")
         end
       end
+
+      match /support-bot does (.*) exist in shuttlerock for (.*)/ do |client, data, match|
+        # SNS url
+        url = match[1]
+        # client site url
+        client_site = match[2]
+
+        matched_entry = self.search_all_boards(client_site, url)
+        unless matched_entry.nil?
+          client.say(channel: data.channel,
+                     text: "Content exists already in board #{matched_entry['board_slug']} #{client_site + '/' + matched_entry['board_slug']}")
+        end
+
+      end
+
+
     end
   end
 end

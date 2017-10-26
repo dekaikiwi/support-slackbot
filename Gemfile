@@ -8,6 +8,7 @@ gem 'dotenv'
 gem 'celluloid-io'
 gem 'ruby-trello'
 gem "zendesk_api"
+gem 'faraday'
 
 group :development, :test do
   gem 'rake'

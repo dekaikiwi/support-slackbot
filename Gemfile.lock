@@ -139,6 +139,7 @@ PLATFORMS
 DEPENDENCIES
   celluloid-io
   dotenv
+  faraday
   foreman
   puma
   rack-test
