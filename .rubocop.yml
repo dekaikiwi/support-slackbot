@@ -1,0 +1,63 @@
+Documentation:
+  Enabled: false
+
+EmptyLines:
+  Enabled: false
+
+LineLength:
+  Max: 150
+
+Metrics/AbcSize:
+  Enabled: true
+  Max:     25
+
+Metrics/ClassLength:
+  Enabled:       false
+  CountComments: false
+
+Metrics/BlockLength:
+  Enabled:       false
+  CountComments: false
+
+Metrics/MethodLength:
+  Enabled:       true
+  CountComments: false
+  Max:           25
+
+SpaceInsideParens:
+  Enabled: false
+
+SpaceBeforeFirstArg:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled:       true
+  EnforcedStyle: compact
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  Enabled:                   true
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInLiteral:
+  Enabled:                   true
+  EnforcedStyleForMultiline: comma
+
+Style/AndOr:
+  Enabled: false
+
+# https://github.com/codeclimate/codeclimate-rubocop/blob/master/base_rubocop.yml#L71
+# We use %w[ ], not %w( ) because the former looks like an array
+Style/PercentLiteralDelimiters:
+  Enabled: false

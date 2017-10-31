@@ -8,7 +8,10 @@ require 'trello'
 require 'web'
 require 'zendesk_api'
 require 'faraday'
-require "json"
+require 'json'
+require 'faraday_middleware'
+
+$sr_api_per_page = 20
 
 Trello.configure do |config|
   config.developer_public_key = ENV['TRELLO_API_KEY']

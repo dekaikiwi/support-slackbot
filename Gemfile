@@ -9,6 +9,7 @@ gem 'celluloid-io'
 gem 'ruby-trello'
 gem "zendesk_api"
 gem 'faraday'
+gem 'faraday_middleware'
 
 group :development, :test do
   gem 'rake'
